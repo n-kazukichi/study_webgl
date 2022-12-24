@@ -1,3 +1,5 @@
+import { getCanvas, getGLContext } from './js/utils'
+
 // GLの厳密モード
 'use strict'
 
@@ -64,14 +66,14 @@ const checkKey = (ev:KeyboardEvent):void => {
  * 初期化
  */
 const init = ():void => {
-  const canvas = document.getElementById(CANVAS_ELM_NAME)
-  if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
+  const canvas = getCanvas(CANVAS_ELM_NAME)
+  if (!canvas) {
     // 要素無かった || canvas タグじゃなかった の場合エラー。
-    setErrorMessage('Canvas要素無いですよ')
+    setErrorMessage('Canvasを取得できませんでした。')
     return
   }
 
-  const context = canvas.getContext('webgl2')
+  const context = getGLContext(canvas)
   if (!context) {
     setErrorMessage('WebGL2.0使えるブラウザではない。')
     return
