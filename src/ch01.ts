@@ -1,12 +1,12 @@
+/* eslint-disable no-console */
 import { getCanvas, getGLContext } from './js/utils'
 
-// GLの厳密モード
-'use strict'
+// tsconfigで "alwaysStrict": true を指定しているので
+// 'use strict' トランスパイル後に自動で追加される。
 
-let gl:WebGL2RenderingContext
+let gl: WebGL2RenderingContext
 
 const setErrorMessage = (msg: string) => {
-  console.error(msg)
   const error = document.getElementById('error')
   if (!error) {
     return
@@ -24,48 +24,57 @@ const updateClearColor = (r: number, g: number, b: number, a: number) => {
   gl.viewport(0, 0, 0, 0)
 }
 
-const checkKey = (ev:KeyboardEvent):void => {
+const checkKey = (ev: KeyboardEvent): void => {
   // 文字コードは非推奨になったらしい。
   // ev.code: 'Digit1' や 'LeftAlt' 'KeyA' など
   // Altなど複数ある同じキーでも、左右どちら？がわかる。
-  
+
   // ev.key: '1' や 'Alt' 'a' など
   // Caps状態やShiftを押している場合
   // アルファベットが大小どちらで入力された？もわかる。
   // console.log('ev', ev.code, ev.key)
 
-  switch(ev.code) {
-    case 'Digit1': { // red
+  switch (ev.code) {
+    case 'Digit1': {
+      // red
       updateClearColor(1, 0, 0, 1)
       break
     }
-    case 'Digit2': { // green
+    case 'Digit2': {
+      // green
       updateClearColor(0, 1, 0, 1)
       break
     }
-    case 'Digit3': { // blue
+    case 'Digit3': {
+      // blue
       updateClearColor(0, 0, 1, 1)
       break
     }
-    case 'Digit4': { // rand
+    case 'Digit4': {
+      // rand
       updateClearColor(Math.random(), Math.random(), Math.random(), 1)
       break
     }
-    case 'KeyA': { // rand
+    case 'KeyA': {
+      // rand
       const color = gl.getParameter(gl.COLOR_CLEAR_VALUE) as Float32Array
-      
+
       console.log(
-        `r=${color[0].toFixed(1)},g=${color[1].toFixed(1)},b=${color[2].toFixed(1)}`
+        `r=${color[0].toFixed(1)},g=${color[1].toFixed(1)},b=${color[2].toFixed(
+          1
+        )}`
       )
       break
     }
+    default:
+      break
   }
 }
 
 /**
  * 初期化
  */
-const init = ():void => {
+const init = (): void => {
   const canvas = getCanvas(CANVAS_ELM_NAME)
   if (!canvas) {
     // 要素無かった || canvas タグじゃなかった の場合エラー。

@@ -1,21 +1,26 @@
+/* eslint-disable no-console */
 
 /**
  * Find and return a DOM element given an ID
  * html内から、 <canvas id="name"/> の要素を取得して返却します。
- * 
- * @param canvasElementId canvasに割り振られたid 
+ *
+ * @param canvasElementId canvasに割り振られたid
  * @returns HTMLCanvasElement 取得できなかった場合null
  */
-export const getCanvas = (canvasElementId: string): HTMLCanvasElement | null => {
-  const canvas = document.getElementById(canvasElementId);
+export const getCanvas = (
+  canvasElementId: string
+): HTMLCanvasElement | null => {
+  const canvas = document.getElementById(canvasElementId)
 
   if (!canvas) {
-    console.error(`${canvasElementId} というidのElementが存在しません。`);
+    console.error(`${canvasElementId} というidのElementが存在しません。`)
     return null
   }
-  
+
   if (!(canvas instanceof HTMLCanvasElement)) {
-    console.error(`このElementはCanvasではありません。 ${canvasElementId}==<${canvas.tagName.toLowerCase()}>`);
+    console.error(
+      `このElementはCanvasではありません。 ${canvasElementId}==<${canvas.tagName.toLowerCase()}>`
+    )
     return null
   }
 
@@ -24,11 +29,13 @@ export const getCanvas = (canvasElementId: string): HTMLCanvasElement | null => 
 
 /**
  * Given a canvas element, return the WebGL2 context
- * @param canvas canvas要素 
+ * @param canvas canvas要素
  * @returns WebGL2のcontext ブラウザが対応していないなど
  * 取得できなかった場合null
  */
-export const getGLContext = (canvas: HTMLCanvasElement): WebGL2RenderingContext | null => canvas.getContext('webgl2')
+export const getGLContext = (
+  canvas: HTMLCanvasElement
+): WebGL2RenderingContext | null => canvas.getContext('webgl2')
 
 /*
 'use strict';
