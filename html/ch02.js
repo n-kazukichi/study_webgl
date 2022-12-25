@@ -16,7 +16,7 @@
   \*********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _lib_test_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/test_lib */ \"./src/lib/test_lib.ts\");\n\nconsole.log(\"ch02\");\n(0,_lib_test_lib__WEBPACK_IMPORTED_MODULE_0__.hoge)();\n\n\n//# sourceURL=webpack://webgl/./src/ch02.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _lib_test_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/test_lib */ \"./src/lib/test_lib.ts\");\n\nconsole.log('ch02');\n(0,_lib_test_lib__WEBPACK_IMPORTED_MODULE_0__.hoge)();\n\n\n//# sourceURL=webpack://webgl/./src/ch02.ts?");
 
 /***/ }),
 
