@@ -19,6 +19,10 @@ module.exports = {
     },
   },
   rules: {
+    // 各種フラグの指定等に|でbit演算を頻繁に行うため。
+    'no-bitwise': 'off',
+    // GLint等、グローバルな型定義を使うため。
+    'no-undef': 'off',
     // import時、以下の拡張子のファイルは省略
     'import/extensions': [
       'error',

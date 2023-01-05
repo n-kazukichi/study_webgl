@@ -37,6 +37,52 @@ export const getGLContext = (
   canvas: HTMLCanvasElement
 ): WebGL2RenderingContext | null => canvas.getContext('webgl2')
 
+/**
+ * Utilの再定義。
+ * バンドルサイズ的には↑のように１メソッドごとexportして必要なものだけ
+ * 使えばいいが、写経にあたり書き味が悪くなるため
+ * utils.xxx()の形で呼び出したいためclass使う。
+ *
+ */
+export class utils {
+  // eslint-disable-next-line class-methods-use-this
+
+  /**
+   * Find and return a DOM element given an ID
+   * html内から、 <canvas id="name"/> の要素を取得して返却します。
+   *
+   * @param canvasElementId canvasに割り振られたid
+   * @returns HTMLCanvasElement 取得できなかった場合null
+   */
+  static getCanvas = (canvasElementId: string): HTMLCanvasElement | null => {
+    const canvas = document.getElementById(canvasElementId)
+
+    if (!canvas) {
+      console.error(`${canvasElementId} というidのElementが存在しません。`)
+      return null
+    }
+
+    if (!(canvas instanceof HTMLCanvasElement)) {
+      console.error(
+        `このElementはCanvasではありません。 ${canvasElementId}==<${canvas.tagName.toLowerCase()}>`
+      )
+      return null
+    }
+
+    return canvas
+  }
+
+  /**
+   * Given a canvas element, return the WebGL2 context
+   * @param canvas canvas要素
+   * @returns WebGL2のcontext ブラウザが対応していないなど
+   * 取得できなかった場合null
+   */
+  static getGLContext = (
+    canvas: HTMLCanvasElement
+  ): WebGL2RenderingContext | null => canvas.getContext('webgl2')
+}
+
 /*
 'use strict';
 
