@@ -5,6 +5,10 @@ import { utils } from './js/utils'
 // 従ってTSで記述は不可。シェーダ言語部は文字列として記述します。
 // 今はとりあえずTS内に記述するが、ゆくゆくはシェーダごと別ファイルに。
 
+let R = 1.0
+let G = 1.0
+let B = 1.0
+
 const vertexShaderScript = `
 #version 300 es
 precision mediump float;
@@ -17,17 +21,17 @@ void main(void) {
   gl_Position = vec4(aVertexPosition, 1.0);
 }
 `
-const fragmentShaderScript = `
-#version 300 es
-precision mediump float;
-
-// Color that is the result of this shader
-out vec4 fragColor;
-
-void main(void) {
-  // Set the result as red
-  fragColor = vec4(1.0, 0.0, 0.0, 1.0);
-}
+const getFragmentShaderScript = () => `
+  #version 300 es
+  precision mediump float;
+  
+  // Color that is the result of this shader
+  out vec4 fragColor;
+  
+  void main(void) {
+    // Set the result as red
+    fragColor = vec4(${R}, ${G}, ${B}, 1.0);
+  }
 `
 
 // Global variables that are set and used
@@ -36,7 +40,7 @@ let gl: WebGL2RenderingContext
 let program: WebGLProgram
 let squareVertexBuffer: WebGLBuffer
 let squareIndexBuffer: WebGLBuffer
-let indices
+let indices: number[]
 
 // Given an id, extract the content's of a shader script
 // from the DOM and return the compiled shader
@@ -72,7 +76,7 @@ let aVertexPosition: GLint = 0
 // Create a program with the appropriate vertex and fragment shaders
 const initProgram = () => {
   const vertexShader = getShader('VERTEX', vertexShaderScript)
-  const fragmentShader = getShader('FRAGMENT', fragmentShaderScript)
+  const fragmentShader = getShader('FRAGMENT', getFragmentShaderScript())
 
   // Create a program
   program = gl.createProgram()
@@ -162,8 +166,9 @@ const init = () => {
   const canvas = utils.getCanvas('webgl-canvas')
 
   // Set the canvas to the size of the screen
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight
+  // fullscreenだといじりづらいので適当に。
+  canvas.width = 640 // window.innerWidth
+  canvas.height = 480 // window.innerHeight
 
   // Retrieve a WebGL context
   gl = utils.getGLContext(canvas)
@@ -175,6 +180,23 @@ const init = () => {
   initBuffers()
   draw()
 }
+
+// ==========================================
+// ポリゴンの色を自由に変えられるように改造
+function aplay() {
+  const inputR = document.getElementById('col-r') as HTMLInputElement
+  const inputG = document.getElementById('col-g') as HTMLInputElement
+  const inputB = document.getElementById('col-b') as HTMLInputElement
+  R = Number(inputR.value) / 255
+  G = Number(inputG.value) / 255
+  B = Number(inputB.value) / 255
+  initProgram()
+  initBuffers()
+  draw()
+}
+
+const aplayButton = document.getElementById('aplay') as HTMLButtonElement
+aplayButton.onclick = aplay
 
 // Call init once the webpage has loaded
 window.onload = init
