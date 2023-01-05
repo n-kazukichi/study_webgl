@@ -19,6 +19,8 @@ module.exports = {
     },
   },
   rules: {
+    // errorメッセージ等、consoleで表示することが多いため。
+    'no-console': 'off',
     // 各種フラグの指定等に|でbit演算を頻繁に行うため。
     'no-bitwise': 'off',
     // GLint等、グローバルな型定義を使うため。
