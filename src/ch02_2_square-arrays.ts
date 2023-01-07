@@ -33,14 +33,11 @@ const getFragmentShaderScript = () => `
     fragColor = vec4(${R}, ${G}, ${B}, 1.0);
   }
 `
+// インデックスバッファを使わず頂点情報でのみ描画する。
 
-// Global variables that are set and used
-// across the application
 let gl: WebGL2RenderingContext
 let program: WebGLProgram
 let squareVertexBuffer: WebGLBuffer
-let squareIndexBuffer: WebGLBuffer
-let indices: number[]
 
 // Given an id, extract the content's of a shader script
 // from the DOM and return the compiled shader
@@ -102,6 +99,8 @@ const initProgram = () => {
 // Set up the buffers for the square
 const initBuffers = () => {
   /*
+              V4
+          (0.0, 1.0, 0)
     V0                    V3
     (-0.5, 0.5, 0)        (0.5, 0.5, 0)
     X---------------------X
@@ -115,24 +114,20 @@ const initBuffers = () => {
     (-0.5, -0.5, 0)       (0.5, -0.5, 0)
   */
 
-  //  const vertices = [-0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0]
-  // 頂点座標をx,y,zの３要素ずつ改行したいが。。。pritterが許してくれないので
-  // 二次元配列を一次元に引き伸ばすように定義。可読性のために無駄な処理をするが
-  // 初期化処理内だしまぁいっか。
+  // 頂点バッファと頂点インデクスを併用しない場合、三角形を１コ１コ定義してやる。
   const vertices = [
-    [-0.5, 0.5, 0],
-    [-0.5, -0.5, 0],
-    [0.5, -0.5, 0],
-    [0.5, 0.5, 0],
-    [0.0, 1.0, 0], // 課題 ５角形用の頂点を１コ追加
-  ].flat()
-
-  // Indices defined in counter-clockwise order
-  //  indices = [0, 1, 2, 0, 2, 3]
-  indices = [
-    [0, 1, 2],
-    [0, 2, 3],
-    [0, 3, 4], // 課題 ５角形用のインデクス 反時計カリングでポリゴン１コ追加。
+    // 左下三角形
+    [-0.5, 0.5, 0], // V0
+    [-0.5, -0.5, 0], // V1
+    [0.5, -0.5, 0], // V2
+    // 右上三角形
+    [-0.5, 0.5, 0], // V0
+    [0.5, -0.5, 0], // V2
+    [0.5, 0.5, 0], // V3
+    // 屋根の三角形
+    [-0.5, 0.5, 0], // V0
+    [0.0, 1.0, 0], // V4
+    [0.5, 0.5, 0], // V3
   ].flat()
 
   // Setting up the VBO
@@ -140,18 +135,8 @@ const initBuffers = () => {
   gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexBuffer)
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
 
-  // Setting up the IBO
-  squareIndexBuffer = gl.createBuffer()
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareIndexBuffer)
-  gl.bufferData(
-    gl.ELEMENT_ARRAY_BUFFER,
-    new Uint16Array(indices),
-    gl.STATIC_DRAW
-  )
-
   // Clean
   gl.bindBuffer(gl.ARRAY_BUFFER, null)
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
 }
 
 // We call draw to render to our canvas
@@ -165,15 +150,13 @@ const draw = () => {
   gl.vertexAttribPointer(aVertexPosition, 3, gl.FLOAT, false, 0, 0)
   gl.enableVertexAttribArray(aVertexPosition)
 
-  // Bind IBO
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareIndexBuffer)
-
-  // Draw to the scene using triangle primitives
-  gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
+  // 頂点バッファのどこからどこまで描画するか？
+  // バッファの先頭から三角形が3コ つまり9頂点までを描画
+  gl.drawArrays(gl.TRIANGLES, 0, 9)
 
   // Clean
   gl.bindBuffer(gl.ARRAY_BUFFER, null)
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
+  //  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
 }
 
 // Entry point to our application

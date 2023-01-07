@@ -5,7 +5,7 @@ module.exports = {
     // チャプターごとに定義
     ch01: './src/ch01.ts',
     ch02: './src/ch02.ts',
-    'ch02-3': './src/ch02-3.ts',
+    'ch02_2_square-arrays': './src/ch02_2_square-arrays.ts',
     //    ch03: './src/ch03.ts'...
   },
   output: {
